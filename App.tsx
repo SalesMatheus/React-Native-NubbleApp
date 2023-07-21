@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {ThemeProvider} from '@shopify/restyle';
 
 import {theme} from './src/theme/theme';
@@ -11,10 +11,8 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <SafeAreaView>
         <Box padding="s20">
-          <Box marginBottom="s24">
-            <Button title="Entrar" />
-          </Box>
-          <Button title="Entrar" loading />
+          <Button title="Enter" marginBottom="s12" />
+          <Button title="loading" loading />
         </Box>
       </SafeAreaView>
     </ThemeProvider>
