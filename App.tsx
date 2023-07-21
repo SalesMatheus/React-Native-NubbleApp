@@ -4,14 +4,18 @@ import {ThemeProvider} from '@shopify/restyle';
 
 import {theme} from './src/theme/theme';
 import {Button} from './src/components/Button/Button';
+import {Box} from './src/components/Box/Box';
 
 function App(): JSX.Element {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaView>
-        <View style={{padding: 24}}>
-          <Button title="Entrar" />
-        </View>
+        <Box padding="s20">
+          <Box marginBottom="s24">
+            <Button title="Entrar" />
+          </Box>
+          <Button title="Entrar" loading />
+        </Box>
       </SafeAreaView>
     </ThemeProvider>
   );
