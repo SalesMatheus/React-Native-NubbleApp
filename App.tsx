@@ -13,7 +13,8 @@ function App(): JSX.Element {
         <Box padding="s20">
           <Button title="Primary" marginBottom="s12" preset="primary" />
           <Button title="Outline" marginBottom="s12" preset="outline" />
-          <Button title="loading" loading />
+          <Button title="loading" marginBottom="s12" loading />
+          <Button title="loading outline" preset="outline" loading />
         </Box>
       </SafeAreaView>
     </ThemeProvider>
