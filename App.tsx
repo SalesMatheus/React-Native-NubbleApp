@@ -11,7 +11,12 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <SafeAreaView>
         <Box padding="s20">
-          <Button title="Primary" marginBottom="s12" preset="primary" />
+          <Button
+            title="Primary"
+            marginBottom="s12"
+            preset="primary"
+            disabled
+          />
           <Button title="Outline" marginBottom="s12" preset="outline" />
           <Button title="loading" marginBottom="s12" loading />
           <Button title="loading outline" preset="outline" loading />
