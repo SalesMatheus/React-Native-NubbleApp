@@ -18,8 +18,7 @@ export function LoginScreen() {
 
       <TextInput
         label="E-mail"
-        placeholder="Digite seu E-mail"
-        errorMessages="Mensagem de error"
+        placeholder="Digite seu e-mail"
         boxProps={{mb: 's20'}}
       />
 
