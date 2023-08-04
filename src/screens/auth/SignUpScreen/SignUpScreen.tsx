@@ -1,4 +1,5 @@
 import React from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {Screen} from '../../../components/Screen/Screen';
 import {Text} from '../../../components/Text/Text';
@@ -6,10 +7,14 @@ import {TextInput} from '../../../components/TextInput/TextInput';
 import {Button} from '../../../components/Button/Button';
 import {PasswordInput} from '../../../components/PasswordInput/PasswordInput';
 
-export function SignUpScreen() {
+import {RootStackParamList} from '../../../routes/Routes';
+
+type ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
+
+export function SignUpScreen({navigation}: ScreenProps) {
   function submitForm() {
     // TODO: implement
-    console.log('submitForm');
+    navigation.navigate('SuccessScreen');
   }
 
   return (
