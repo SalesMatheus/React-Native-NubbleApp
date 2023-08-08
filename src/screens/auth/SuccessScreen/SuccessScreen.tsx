@@ -14,8 +14,7 @@ export function SuccessScreen({navigation, route}: ScreenProps) {
   const {title, description, icon} = route.params;
 
   function goBackToBegin() {
-    //TODO: implement
-    console.log('goBackToBegin');
+    navigation.navigate('LoginScreen');
   }
 
   return (

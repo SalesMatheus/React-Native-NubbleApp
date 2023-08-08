@@ -7,6 +7,7 @@ import {TextInput} from '../../../components/TextInput/TextInput';
 import {Button} from '../../../components/Button/Button';
 
 import {RootStackParamList} from '../../../routes/Routes';
+import {useResetNavigationSuccess} from '../../../hooks/useResetNavigationSuccess';
 
 type ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -14,8 +15,10 @@ type ScreenProps = NativeStackScreenProps<
 >;
 
 export function ForgotPasswordScreen({navigation}: ScreenProps) {
+  const {reset} = useResetNavigationSuccess();
+
   function submitForm() {
-    navigation.navigate('SuccessScreen', {
+    reset({
       title: 'Enviamos as instruções para seu email',
       description:
         'Clique no link enviado no seu email para recuperar sua senha',
