@@ -48,10 +48,12 @@ export function TextInput({
         </Text>
         <Box {...$textInputContainer}>
           <RNTextInput
+            autoCapitalize="none"
+            autoCorrect={false}
             ref={inputRef}
-            {...rnTextInputProps}
-            style={$textInputStyle}
             placeholderTextColor={colors.gray2}
+            style={$textInputStyle}
+            {...rnTextInputProps}
           />
           {RightComponent && (
             <Box justifyContent="center" ml="s16">
