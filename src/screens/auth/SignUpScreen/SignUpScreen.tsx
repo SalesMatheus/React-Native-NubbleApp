@@ -10,6 +10,7 @@ import {PasswordInput} from '../../../components/PasswordInput/PasswordInput';
 
 import {RootStackParamList} from '../../../routes/Routes';
 import {useResetNavigationSuccess} from '../../../hooks/useResetNavigationSuccess';
+import {FormTextInput} from '../../../components/Form/FormTextInput';
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
@@ -51,7 +52,7 @@ export function SignUpScreen({navigation}: ScreenProps) {
         Criar uma conta
       </Text>
 
-      <Controller
+      <FormTextInput
         control={control}
         name="username"
         rules={{
@@ -61,20 +62,13 @@ export function SignUpScreen({navigation}: ScreenProps) {
             message: 'Username deve ter no mínimo 3 caracteres',
           },
         }}
-        render={({field, fieldState}) => (
-          <TextInput
-            autoCapitalize="sentences"
-            label="Seu username"
-            placeholder="@"
-            boxProps={{mb: 's20'}}
-            onChangeText={field.onChange}
-            value={field.value}
-            errorMessages={fieldState.error?.message}
-          />
-        )}
+        autoCapitalize="sentences"
+        label="Seu username"
+        placeholder="@"
+        boxProps={{mb: 's20'}}
       />
 
-      <Controller
+      <FormTextInput
         control={control}
         name="fullName"
         rules={{
@@ -84,19 +78,13 @@ export function SignUpScreen({navigation}: ScreenProps) {
             message: 'Nome completo deve ter no mínimo 3 caracteres',
           },
         }}
-        render={({field, fieldState}) => (
-          <TextInput
-            label="Nome Completo"
-            placeholder="Digite seu nome completo"
-            boxProps={{mb: 's20'}}
-            onChangeText={field.onChange}
-            value={field.value}
-            errorMessages={fieldState.error?.message}
-          />
-        )}
+        autoCapitalize="words"
+        label="Nome Completo"
+        placeholder="Digite seu nome completo"
+        boxProps={{mb: 's20'}}
       />
 
-      <Controller
+      <FormTextInput
         control={control}
         name="email"
         rules={{
@@ -106,16 +94,9 @@ export function SignUpScreen({navigation}: ScreenProps) {
             message: 'E-mail inválido',
           },
         }}
-        render={({field, fieldState}) => (
-          <TextInput
-            label="E-mail"
-            placeholder="Digite seu e-mail"
-            boxProps={{mb: 's20'}}
-            onChangeText={field.onChange}
-            value={field.value}
-            errorMessages={fieldState.error?.message}
-          />
-        )}
+        label="E-mail"
+        placeholder="Digite seu e-mail"
+        boxProps={{mb: 's20'}}
       />
 
       <Controller
