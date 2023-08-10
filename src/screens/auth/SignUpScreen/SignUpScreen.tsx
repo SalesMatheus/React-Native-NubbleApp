@@ -1,5 +1,6 @@
 import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Controller, useForm} from 'react-hook-form';
 
 import {Screen} from '../../../components/Screen/Screen';
 import {Text} from '../../../components/Text/Text';
@@ -12,18 +13,36 @@ import {useResetNavigationSuccess} from '../../../hooks/useResetNavigationSucces
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
+type SignUpFormType = {
+  username: string;
+  fullName: string;
+  email: string;
+  password: string;
+};
+
 export function SignUpScreen({navigation}: ScreenProps) {
   const {reset} = useResetNavigationSuccess();
 
-  function submitForm() {
-    reset({
-      title: 'sua conta foi criada com sucesso!',
-      description: 'Agora é só fazer login na nossa plataforma.',
-      icon: {
-        name: 'checkRound',
-        color: 'success',
-      },
-    });
+  const {control, formState, handleSubmit} = useForm<SignUpFormType>({
+    defaultValues: {
+      username: '',
+      fullName: '',
+      email: '',
+      password: '',
+    },
+    mode: 'onChange',
+  });
+
+  function submitForm(formValues: SignUpFormType) {
+    console.log(formValues);
+    // reset({
+    //   title: 'sua conta foi criada com sucesso!',
+    //   description: 'Agora é só fazer login na nossa plataforma.',
+    //   icon: {
+    //     name: 'checkRound',
+    //     color: 'success',
+    //   },
+    // });
   }
 
   return (
@@ -32,27 +51,106 @@ export function SignUpScreen({navigation}: ScreenProps) {
         Criar uma conta
       </Text>
 
-      <TextInput label="Seu username" placeholder="@" boxProps={{mb: 's20'}} />
-
-      <TextInput
-        label="Nome Completo"
-        placeholder="Digite seu nome completo"
-        boxProps={{mb: 's20'}}
+      <Controller
+        control={control}
+        name="username"
+        rules={{
+          required: 'Username obrigatório',
+          minLength: {
+            value: 3,
+            message: 'Username deve ter no mínimo 3 caracteres',
+          },
+        }}
+        render={({field, fieldState}) => (
+          <TextInput
+            autoCapitalize="sentences"
+            label="Seu username"
+            placeholder="@"
+            boxProps={{mb: 's20'}}
+            onChangeText={field.onChange}
+            value={field.value}
+            errorMessages={fieldState.error?.message}
+          />
+        )}
       />
 
-      <TextInput
-        label="E-mail"
-        placeholder="Digite seu e-mail"
-        boxProps={{mb: 's20'}}
+      <Controller
+        control={control}
+        name="fullName"
+        rules={{
+          required: 'Nome completo obrigatório',
+          minLength: {
+            value: 3,
+            message: 'Nome completo deve ter no mínimo 3 caracteres',
+          },
+        }}
+        render={({field, fieldState}) => (
+          <TextInput
+            label="Nome Completo"
+            placeholder="Digite seu nome completo"
+            boxProps={{mb: 's20'}}
+            onChangeText={field.onChange}
+            value={field.value}
+            errorMessages={fieldState.error?.message}
+          />
+        )}
       />
 
-      <PasswordInput
-        label="Senha"
-        placeholder="Digite sua Senha"
-        boxProps={{mb: 's48'}}
+      <Controller
+        control={control}
+        name="email"
+        rules={{
+          required: 'E-mail obrigatório',
+          pattern: {
+            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            message: 'E-mail inválido',
+          },
+        }}
+        render={({field, fieldState}) => (
+          <TextInput
+            label="E-mail"
+            placeholder="Digite seu e-mail"
+            boxProps={{mb: 's20'}}
+            onChangeText={field.onChange}
+            value={field.value}
+            errorMessages={fieldState.error?.message}
+          />
+        )}
       />
 
-      <Button onPress={submitForm} preset="primary" title="Criar conta" />
+      <Controller
+        control={control}
+        name="password"
+        rules={{
+          required: 'Senha obrigatória',
+          minLength: {
+            value: 8,
+            message: 'Senha deve ter no mínimo 8 caracteres',
+          },
+          pattern: {
+            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+            message:
+              'Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número',
+          },
+        }}
+        render={({field, fieldState}) => (
+          <PasswordInput
+            label="Senha"
+            placeholder="Digite sua Senha"
+            boxProps={{mb: 's48'}}
+            onChangeText={field.onChange}
+            value={field.value}
+            errorMessages={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Button
+        onPress={handleSubmit(submitForm)}
+        disabled={!formState.isValid}
+        preset="primary"
+        title="Criar conta"
+      />
     </Screen>
   );
 }
