@@ -1,30 +1,25 @@
 import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Controller, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 
 import {Screen} from '../../../components/Screen/Screen';
 import {Text} from '../../../components/Text/Text';
-import {TextInput} from '../../../components/TextInput/TextInput';
 import {Button} from '../../../components/Button/Button';
-import {PasswordInput} from '../../../components/PasswordInput/PasswordInput';
-
-import {RootStackParamList} from '../../../routes/Routes';
-import {useResetNavigationSuccess} from '../../../hooks/useResetNavigationSuccess';
+import {FormPasswordInput} from '../../../components/Form/FormPasswordInput';
 import {FormTextInput} from '../../../components/Form/FormTextInput';
 
-type ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
+import {SignUpSchemaType, signUpSchema} from './signUpSchema';
+import {RootStackParamList} from '../../../routes/Routes';
+import {useResetNavigationSuccess} from '../../../hooks/useResetNavigationSuccess';
 
-type SignUpFormType = {
-  username: string;
-  fullName: string;
-  email: string;
-  password: string;
-};
+type ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
 export function SignUpScreen({navigation}: ScreenProps) {
   const {reset} = useResetNavigationSuccess();
 
-  const {control, formState, handleSubmit} = useForm<SignUpFormType>({
+  const {control, formState, handleSubmit} = useForm<SignUpSchemaType>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: '',
       fullName: '',
@@ -34,16 +29,16 @@ export function SignUpScreen({navigation}: ScreenProps) {
     mode: 'onChange',
   });
 
-  function submitForm(formValues: SignUpFormType) {
+  function submitForm(formValues: SignUpSchemaType) {
     console.log(formValues);
-    // reset({
-    //   title: 'sua conta foi criada com sucesso!',
-    //   description: 'Agora é só fazer login na nossa plataforma.',
-    //   icon: {
-    //     name: 'checkRound',
-    //     color: 'success',
-    //   },
-    // });
+    reset({
+      title: 'sua conta foi criada com sucesso!',
+      description: 'Agora é só fazer login na nossa plataforma.',
+      icon: {
+        name: 'checkRound',
+        color: 'success',
+      },
+    });
   }
 
   return (
@@ -55,13 +50,6 @@ export function SignUpScreen({navigation}: ScreenProps) {
       <FormTextInput
         control={control}
         name="username"
-        rules={{
-          required: 'Username obrigatório',
-          minLength: {
-            value: 3,
-            message: 'Username deve ter no mínimo 3 caracteres',
-          },
-        }}
         autoCapitalize="sentences"
         label="Seu username"
         placeholder="@"
@@ -71,13 +59,6 @@ export function SignUpScreen({navigation}: ScreenProps) {
       <FormTextInput
         control={control}
         name="fullName"
-        rules={{
-          required: 'Nome completo obrigatório',
-          minLength: {
-            value: 3,
-            message: 'Nome completo deve ter no mínimo 3 caracteres',
-          },
-        }}
         autoCapitalize="words"
         label="Nome Completo"
         placeholder="Digite seu nome completo"
@@ -87,43 +68,17 @@ export function SignUpScreen({navigation}: ScreenProps) {
       <FormTextInput
         control={control}
         name="email"
-        rules={{
-          required: 'E-mail obrigatório',
-          pattern: {
-            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-            message: 'E-mail inválido',
-          },
-        }}
         label="E-mail"
         placeholder="Digite seu e-mail"
         boxProps={{mb: 's20'}}
       />
 
-      <Controller
+      <FormPasswordInput
         control={control}
         name="password"
-        rules={{
-          required: 'Senha obrigatória',
-          minLength: {
-            value: 8,
-            message: 'Senha deve ter no mínimo 8 caracteres',
-          },
-          pattern: {
-            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-            message:
-              'Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número',
-          },
-        }}
-        render={({field, fieldState}) => (
-          <PasswordInput
-            label="Senha"
-            placeholder="Digite sua Senha"
-            boxProps={{mb: 's48'}}
-            onChangeText={field.onChange}
-            value={field.value}
-            errorMessages={fieldState.error?.message}
-          />
-        )}
+        label="Senha"
+        placeholder="Digite sua Senha"
+        boxProps={{mb: 's48'}}
       />
 
       <Button
