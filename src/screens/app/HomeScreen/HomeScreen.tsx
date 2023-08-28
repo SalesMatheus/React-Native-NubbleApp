@@ -1,22 +1,30 @@
 import React, {useEffect, useState} from 'react';
+import {FlatList, ListRenderItemInfo} from 'react-native';
 
 import {postService, Post} from '@domain';
 
-import {Screen, Text} from '@components';
+import {Screen, PostItem} from '@components';
 import {AppTabScreenProps} from '@routes';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function HomeScreen({navigation}: AppTabScreenProps<'HomeScreen'>) {
   const [postList, setPostList] = useState<Post[]>([]);
 
+  function renderItem({item}: ListRenderItemInfo<Post>) {
+    return <PostItem post={item} />;
+  }
+
   useEffect(() => {
     postService.getList().then(list => setPostList(list));
   }, []);
+
   return (
     <Screen>
-      {postList.map(post => (
-        <Text key={post.id}>{post.id}</Text>
-      ))}
+      <FlatList
+        data={postList}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+      />
     </Screen>
   );
 }
