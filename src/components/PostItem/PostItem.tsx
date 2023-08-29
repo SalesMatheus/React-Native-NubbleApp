@@ -4,9 +4,7 @@ import {Post} from '@domain';
 
 import {Box} from '@components';
 
-import {PostActions} from './components/PostActions/PostActions';
-import {PostHeader} from './components/PostHeader/PostHeader';
-import {PostImage} from './components/PostImage/PostImage';
+import {PostActions, PostHeader, PostImage} from './components';
 
 interface PostItemProps {
   post: Post;
