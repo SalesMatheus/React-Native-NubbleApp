@@ -4,7 +4,7 @@ import {Post} from '@domain';
 
 import {Box} from '@components';
 
-import {PostActions, PostHeader, PostImage} from './components';
+import {PostActions, PostHeader, PostImage, PostBottom} from './components';
 
 interface PostItemProps {
   post: Post;
@@ -19,6 +19,11 @@ export function PostItem({post}: PostItemProps) {
         reactionCount={post.reactionCount}
         commentCount={post.commentCount}
         favoriteCount={post.favoriteCount}
+      />
+      <PostBottom
+        author={post.author}
+        text={post.text}
+        commentCount={post.commentCount}
       />
     </Box>
   );
