@@ -16,7 +16,8 @@ import {HomeEmpty} from './components/HomeEmpty';
 import {HomeHeader} from './components/HomeHeader';
 
 export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
-  const {loading, error, postList, pullRefreshing, onRefresh} = usePostList();
+  const {loading, error, postList, pullRefreshing, onRefresh, onEndReached} =
+    usePostList();
 
   function renderItem({item}: ListRenderItemInfo<Post>) {
     return <PostItem post={item} />;
@@ -35,6 +36,8 @@ export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
         refreshControl={
           <RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />
         }
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.1}
       />
     </Screen>
   );
