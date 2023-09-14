@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {postService, Post} from '@domain';
+import {Post, usePostList} from '@domain';
 
 import {Screen, PostItem} from '@components';
 import {AppTabScreenProps} from '@routes';
@@ -15,40 +15,12 @@ import {AppTabScreenProps} from '@routes';
 import {HomeEmpty} from './components/HomeEmpty';
 import {HomeHeader} from './components/HomeHeader';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function HomeScreen({navigation}: AppTabScreenProps<'HomeScreen'>) {
-  const [loading, setLoading] = useState(true);
-  const [pullRefreshing, setPullRefreshing] = useState(false);
-  const [error, setError] = useState<boolean>(false);
-  const [postList, setPostList] = useState<Post[]>([]);
+export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
+  const {loading, error, postList, pullRefreshing, onRefresh} = usePostList();
 
-  async function fetchData() {
-    try {
-      setError(false);
-      setLoading(true);
-
-      const list = await postService.getList();
-      setPostList(list);
-    } catch (er: any) {
-      setError(true);
-      console.error(er);
-    } finally {
-      setLoading(false);
-    }
-  }
   function renderItem({item}: ListRenderItemInfo<Post>) {
     return <PostItem post={item} />;
   }
-
-  const onPullRefreshing = useCallback(async () => {
-    setPullRefreshing(true);
-    await fetchData();
-    setPullRefreshing(false);
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <Screen style={$screen}>
@@ -61,10 +33,7 @@ export function HomeScreen({navigation}: AppTabScreenProps<'HomeScreen'>) {
         ListHeaderComponent={<HomeHeader />}
         ListEmptyComponent={<HomeEmpty error={error} loading={loading} />}
         refreshControl={
-          <RefreshControl
-            refreshing={pullRefreshing}
-            onRefresh={onPullRefreshing}
-          />
+          <RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />
         }
       />
     </Screen>
