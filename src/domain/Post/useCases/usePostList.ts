@@ -1,55 +1,65 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {Post, postService} from '@domain';
 
 export function usePostList() {
   const [loading, setLoading] = useState(true);
-  const [pullRefreshing, setPullRefreshing] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const [postList, setPostList] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
-  async function fetchData() {
+  async function fetchInitialData() {
     try {
       setError(false);
       setLoading(true);
+      const {data, meta} = await postService.getList(1);
+      setPostList(data);
 
-      const list = await postService.getList(page);
-
-      setPostList(prev => [...prev, ...list]);
-      setPage(prev => prev + 1);
-    } catch (er: any) {
+      if (meta.hasNextPage) {
+        setHasNextPage(true);
+        setPage(2);
+      } else {
+        setHasNextPage(false);
+      }
+    } catch (er) {
       setError(true);
-      console.error(er);
     } finally {
       setLoading(false);
     }
   }
 
-  const onPullRefreshing = useCallback(async () => {
-    setPullRefreshing(true);
-    await fetchData();
-    setPullRefreshing(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchNextPage = async () => {
-    if (!loading) {
-      await fetchData();
+  async function fetchNextPage() {
+    if (loading || !hasNextPage) {
+      return;
     }
-  };
+    try {
+      setLoading(true);
+      const {data, meta} = await postService.getList(page);
+      setPostList(prev => [...prev, ...data]);
+
+      if (meta.hasNextPage) {
+        setHasNextPage(true);
+        setPage(prev => prev + 1);
+      } else {
+        setHasNextPage(false);
+      }
+    } catch (er) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchInitialData();
   }, []);
 
   return {
     loading,
     error,
     postList,
-    pullRefreshing,
-    onRefresh: onPullRefreshing,
+    onRefresh: fetchInitialData,
     onEndReached: fetchNextPage,
   };
 }

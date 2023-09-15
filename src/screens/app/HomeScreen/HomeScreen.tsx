@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import {Post, usePostList} from '@domain';
+import {useScrollToTop} from '@react-navigation/native';
 
 import {Screen, PostItem} from '@components';
 import {AppTabScreenProps} from '@routes';
@@ -16,8 +17,10 @@ import {HomeEmpty} from './components/HomeEmpty';
 import {HomeHeader} from './components/HomeHeader';
 
 export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
-  const {loading, error, postList, pullRefreshing, onRefresh, onEndReached} =
-    usePostList();
+  const {loading, error, postList, onRefresh, onEndReached} = usePostList();
+
+  const flatListRef = useRef<FlatList<Post>>(null);
+  useScrollToTop(flatListRef);
 
   function renderItem({item}: ListRenderItemInfo<Post>) {
     return <PostItem post={item} />;
@@ -26,6 +29,7 @@ export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
   return (
     <Screen style={$screen}>
       <FlatList
+        ref={flatListRef}
         showsVerticalScrollIndicator={false}
         data={postList}
         keyExtractor={item => item.id}
@@ -34,8 +38,9 @@ export function HomeScreen({}: AppTabScreenProps<'HomeScreen'>) {
         ListHeaderComponent={<HomeHeader />}
         ListEmptyComponent={<HomeEmpty error={error} loading={loading} />}
         refreshControl={
-          <RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
         }
+        refreshing={loading}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.1}
       />
