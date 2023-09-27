@@ -1,24 +1,31 @@
 import React from 'react';
 
 import {Post} from '@domain';
+import {useNavigation} from '@react-navigation/native';
 
 import {Box} from '@components';
 
 import {Item} from './components/Item';
 
-type Props = Pick<Post, 'reactionCount' | 'commentCount' | 'favoriteCount'>;
+type Props = Pick<
+  Post,
+  'reactionCount' | 'commentCount' | 'favoriteCount' | 'id'
+>;
 
 export function PostActions({
   reactionCount,
   commentCount,
   favoriteCount,
+  id,
 }: Props) {
+  const navigation = useNavigation();
+
   function likePost() {
     console.log('likePost');
   }
 
   function navigateToComments() {
-    console.log('navigateToComments');
+    navigation.navigate('PostCommentScreen', {postId: id});
   }
 
   function favoritePost() {

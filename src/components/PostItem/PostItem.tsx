@@ -19,11 +19,13 @@ export function PostItem({post}: PostItemProps) {
         reactionCount={post.reactionCount}
         commentCount={post.commentCount}
         favoriteCount={post.favoriteCount}
+        id={post.id}
       />
       <PostBottom
         author={post.author}
         text={post.text}
         commentCount={post.commentCount}
+        id={post.id}
       />
     </Box>
   );
