@@ -10,7 +10,7 @@ export type AppStackParamList = {
   AppTabNavigator: NavigatorScreenParams<AppTabParamList>;
   SettingsScreen: undefined;
   PostCommentScreen: {
-    postId: string;
+    postId: number;
   };
 };
 
