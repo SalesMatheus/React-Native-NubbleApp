@@ -15,7 +15,6 @@ export function ScreenHeader({title, canGoBack}: Props) {
   return (
     <Box
       justifyContent="space-between"
-      backgroundColor="error"
       flexDirection="row"
       alignItems="center"
       mb="s24">
