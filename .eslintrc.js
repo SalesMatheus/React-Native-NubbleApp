@@ -35,6 +35,7 @@ module.exports = {
             'newlines-between': 'always',
           },
         ],
+        'react-native/no-inline-styles': 0,
       },
     },
   ],
