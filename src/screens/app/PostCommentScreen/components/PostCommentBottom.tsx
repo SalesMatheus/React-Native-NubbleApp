@@ -12,6 +12,7 @@ export function PostCommentBottom({onEndReached, hasNextPage}: Props) {
   if (!hasNextPage) {
     return null;
   }
+
   return (
     <Pressable onPress={onEndReached}>
       <Text color="primary" preset="paragraphLarge" bold textAlign="center">
