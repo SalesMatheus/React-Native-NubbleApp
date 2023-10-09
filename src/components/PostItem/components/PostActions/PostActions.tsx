@@ -9,7 +9,7 @@ import {Item} from './components/Item';
 
 type Props = Pick<
   Post,
-  'reactionCount' | 'commentCount' | 'favoriteCount' | 'id'
+  'reactionCount' | 'commentCount' | 'favoriteCount' | 'id' | 'author'
 >;
 
 export function PostActions({
@@ -17,6 +17,7 @@ export function PostActions({
   commentCount,
   favoriteCount,
   id,
+  author,
 }: Props) {
   const navigation = useNavigation();
 
@@ -25,7 +26,10 @@ export function PostActions({
   }
 
   function navigateToComments() {
-    navigation.navigate('PostCommentScreen', {postId: id});
+    navigation.navigate('PostCommentScreen', {
+      postId: id,
+      postAuthorId: author.id,
+    });
   }
 
   function favoritePost() {
