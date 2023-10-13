@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Dimensions} from 'react-native';
 
-import {useToast} from '@service';
+import {useToast, useToastService} from '@service';
 
 import {Box, BoxProps, Icon, Text} from '@components';
 import {$shadowProps} from '@theme';
@@ -10,7 +10,8 @@ const MAX_WIDTH = Dimensions.get('screen').width * 0.9;
 const TOAST_DURATION = 3000;
 
 export function Toast() {
-  const {toast, hideToast} = useToast();
+  const toast = useToast();
+  const {hideToast} = useToastService();
 
   useEffect(() => {
     if (toast) {
