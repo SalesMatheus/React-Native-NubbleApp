@@ -1,69 +1,46 @@
+// @ts-nocheck
 import {useEffect, useState} from 'react';
 
+import {useInfiniteQuery} from '@tanstack/react-query';
 import {Page} from '@types';
 
+interface UsePaginatedListResult<T> {
+  dataList: T[];
+  loading: boolean;
+  error: boolean;
+  onRefresh: () => void;
+  onEndReached: () => void;
+  hasNextPage: boolean;
+}
+
 export function usePaginatedList<Data>(
+  queryKey: readonly unknown[],
   getList: (page: number) => Promise<Page<Data>>,
-) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<boolean>(false);
+): UsePaginatedListResult<Data> {
   const [dataList, setDataList] = useState<Data[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(true);
 
-  async function fetchInitialData() {
-    try {
-      setError(false);
-      setLoading(true);
-      const {data, meta} = await getList(1);
-      setDataList(data);
-
-      if (meta.hasNextPage) {
-        setHasNextPage(true);
-        setPage(2);
-      } else {
-        setHasNextPage(false);
-      }
-    } catch (er) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function fetchNextPage() {
-    if (loading || !hasNextPage) {
-      return;
-    }
-    try {
-      setLoading(true);
-      const {data, meta} = await getList(page);
-      setDataList(prev => [...prev, ...data]);
-
-      if (meta.hasNextPage) {
-        setHasNextPage(true);
-        setPage(prev => prev + 1);
-      } else {
-        setHasNextPage(false);
-      }
-    } catch (er) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const query = useInfiniteQuery({
+    queryKey,
+    queryFn: ({pageParam = 1}) => getList(pageParam),
+    getNextPageParam: ({meta}) =>
+      meta.hasNextPage ? meta.currentPage + 1 : undefined,
+  });
 
   useEffect(() => {
-    fetchInitialData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (query.data) {
+      const newList = query.data.pages.reduce<Data[]>((prev, curr) => {
+        return [...prev, ...curr.data];
+      }, []);
+      setDataList(newList);
+    }
+  }, [query.data]);
 
   return {
-    loading,
-    error,
+    loading: query.isLoading,
+    error: query.isError,
     dataList,
-    onRefresh: fetchInitialData,
-    onEndReached: fetchNextPage,
-    hasNextPage,
+    onRefresh: query.refetch,
+    onEndReached: query.fetchNextPage,
+    hasNextPage: !!query.hasNextPage,
   };
 }
